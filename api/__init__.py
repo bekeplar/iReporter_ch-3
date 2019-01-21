@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 import datetime
 from instance.config import app_config
-from api.views.incident import blueprint
+from api.views.redflag import blueprint
 from api.views.user import user_blueprint
 from flask_jwt_extended import JWTManager
 
@@ -21,8 +21,8 @@ def create_app(config_name):
 
     valid_urls = [
             "GET /api/v1/",
-            "POST /api/v1/signup",
-            "POST /api/v1/login",
+            "POST /api/v1/auth/signup",
+            "POST /api/v1/auth/login",
             "GET /api/v1/redflags",
             "GET /api/v1 /redflags/<int:id>",
             "PATCH /api/v1/redflags/<int:id>/location",
@@ -32,12 +32,12 @@ def create_app(config_name):
         ]
 
     @app.errorhandler(Exception)
-    def errors(e):
+    def errors(error):
         """
         This funcion handles the 404 and 405 HTTP STATUS CODES.
         """
         response = None
-        if e.code == 404:
+        if error == 404:
             response = jsonify({
                 'Issue': 'You have entered an unknown URL.',
                 'Valid URLs': valid_urls,
