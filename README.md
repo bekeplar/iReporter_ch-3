@@ -3,9 +3,8 @@
  iReporter enables any/every citizen to bring any form of corruption to the notice of appropriate authorities and the general public. Users can also report on things that needs government intervention
 
 [![Build Status](https://travis-ci.org/bekeplar/iReporter.svg?branch=develop)](https://travis-ci.org/bekeplar/iReporter)
-[![Coverage Status](https://coveralls.io/repos/github/bekeplar/iReporter/badge.svg?branch=develop)](https://coveralls.io/github/bekeplar/iReporter?branch=develop)
-[![Maintainability](https://api.codeclimate.com/v1/badges/af89820c26cf454cb407/maintainability)](https://codeclimate.com/github/bekeplar/iReporter/maintainability)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e8dd68d2fd664a85a1bfca826127d6fd)](https://www.codacy.com/app/bekeplar/iReporter?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=bekeplar/iReporter&amp;utm_campaign=Badge_Grade)
+[![Coverage Status](https://coveralls.io/repos/github/bekeplar/iReporter_ch-3/badge.svg?branch=develop)](https://coveralls.io/github/bekeplar/iReporter_ch-3?branch=develop)
+[![Maintainability](https://api.codeclimate.com/v1/badges/6042069fde009728cd76/maintainability)](https://codeclimate.com/github/bekeplar/iReporter_ch-3/maintainability)
 
 ## Required features
 
