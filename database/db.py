@@ -22,8 +22,8 @@ class DatabaseConnection:
             self.cursor = self.connection.cursor()
             self.dict_cursor = self.connection.cursor(
                                             cursor_factory=RealDictCursor)
-            pprint('Connected to the database')
-            pprint(self.db_name)
+            # pprint('Connected to the database')
+            # pprint(self.db_name)
 
             create_user_table = """CREATE TABLE IF NOT EXISTS users(
             id SERIAL PRIMARY KEY,
