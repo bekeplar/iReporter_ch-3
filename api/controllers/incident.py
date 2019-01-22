@@ -1,3 +1,4 @@
+# importing required dependencies
 import datetime
 import uuid
 from database.db import DatabaseConnection
@@ -27,22 +28,24 @@ class IncidentController:
         createdOn = datetime.datetime.utcnow()
         images = data.get('images')
         videos = data.get('videos')
-
+        
+        # view of an incident object/instance.
         incident = Incident(incident_id, createdBy, type,
                             title, location, comment,
-                            status, createdOn, images, videos
-                           )
+                            status, createdOn, images, videos)
         error = Validators.validate_inputs(incident)      
         exists = incident.check_incident_exist()
         if error != None:
             return jsonify({'Error': error, 'status': 400}), 400
+        # check if already existing incident record.
         if exists:
             return jsonify({
                 'Error': f'{ireporter} record already reported!',
                 'status': 406}), 406
-        db.insert_redflag(incident_id, createdBy, type,
-                          title, location, comment,
-                          status, createdOn, images, videos)
+        # create a new incident in the database of records
+        db.insert_incident(incident_id, createdBy, type,
+                           title, location, comment,
+                           status, createdOn, images, videos)
         return jsonify({
             'status': 201, 
             'message': f'created {ireporter} reccord!',
@@ -56,13 +59,15 @@ class IncidentController:
         :returns:
         The entire incidents reported by a user.
         """
-        all_incidents = db.fetch_all_redflags()
+        all_incidents = db.fetch_all_incidents()
+        # Verify that there are records in the database
         if not all_incidents:
             return jsonify({
                 'satus': 400,
                 'message': f'You haven/t reported any {ireporter}!',
                 'data': all_incidents
             }), 400
+        # Ruturning all existing incident type records.
         return jsonify({
             'status': 200,
             'data': all_incidents,
@@ -78,7 +83,7 @@ class IncidentController:
         For any given right id
         """
         try:
-            get_one = db.fetch_redflag(incident_id)
+            get_one = db.fetch_incident(incident_id)
             if not get_one:
                 return jsonify({
                     'status': 404,
@@ -97,10 +102,10 @@ class IncidentController:
         """
         try:
             username = get_jwt_identity()
-            get_one = db.fetch_redflag(incident_id)
+            get_one = db.fetch_incident(incident_id)
 
             if username and get_one:
-                db.delete_redflag(incident_id)
+                db.delete_incident(incident_id)
                 return jsonify({
                     'message': f'{ireporter} record deleted succesfully.',
                     'data': get_one,
@@ -120,12 +125,12 @@ class IncidentController:
         A method for updating status a specific incident from the report.
         """
         try:
-            get_one = db.fetch_redflag(incident_id)
+            get_one = db.fetch_incident(incident_id)
             if get_one:
                 db.update_status(incident_id, data)
                 return jsonify({
                     'status': 200,
-                    'data': db.fetch_redflag(incident_id),
+                    'data': db.fetch_incident(incident_id),
                     'message': f'{ireporter} status successfully updated!'
                                 }), 200
             else:
@@ -144,12 +149,12 @@ class IncidentController:
         """
         location = data.get('location')
         try:
-            get_one = db.fetch_redflag(incident_id)
+            get_one = db.fetch_incident(incident_id)
             if get_one:
                 db.update_location(incident_id, location)
                 return jsonify({
                     'status': 200,
-                    'data': db.fetch_redflag(incident_id),
+                    'data': db.fetch_incident(incident_id),
                     'message': f'{ireporter} location successfully updated!'
                                 }), 200
             else:
@@ -168,11 +173,11 @@ class IncidentController:
         """
         comment = data.get('comment')
         try:
-            get_one = db.fetch_redflag(incident_id)
+            get_one = db.fetch_incident(incident_id)
             if get_one:
                 db.update_comment(incident_id, comment)
                 return jsonify({'status': 200,
-                                'data': db.fetch_redflag(incident_id),
+                                'data': db.fetch_incident(incident_id),
                                 'message': f'{ireporter} comment successfully updated!'
                                 }), 200
             else:
@@ -184,3 +189,4 @@ class IncidentController:
                 'status': 400,
                 'message': 'Please provide right inputs'
             }), 400
+# courtesy of bekeplar

@@ -1,7 +1,7 @@
 import json
 from database.db import DatabaseConnection
 from flask import jsonify, request, Blueprint
-from api.controllers.redflag import IncidentController
+from api.controllers.incident import IncidentController
 from flask_jwt_extended import jwt_required
 db = DatabaseConnection()
 blueprint = Blueprint('application', __name__)
