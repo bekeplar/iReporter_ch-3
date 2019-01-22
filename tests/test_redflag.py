@@ -486,7 +486,7 @@ class TestRedflag(unittest.TestCase):
             data=json.dumps(new_status)
         )
         reply = json.loads(response.data.decode())
-        self.assertEqual(reply['message'], 'Redflag status successfully updated!')
+        self.assertEqual(reply['message'], 'redflag status successfully updated!')
         self.assertEqual(response.status_code, 200)
 
     def test_edit_comment_not_in_list(self):

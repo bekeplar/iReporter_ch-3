@@ -18,6 +18,7 @@ class DevelopmentConfig(BaseConfig):
     TESTING = False
     ENV = "Development"
 
+    
 
 class TestingConfig(BaseConfig):
     """Testing configuraion. Loads Test configuration data

@@ -1,8 +1,8 @@
 import psycopg2
-import psycopg2.extras
 from psycopg2.extras import RealDictCursor
 from pprint import pprint
 import os
+from instance.config import DevelopmentConfig
 
 
 class DatabaseConnection:
@@ -14,10 +14,10 @@ class DatabaseConnection:
 
         try:
             self.connection = psycopg2.connect(
-                dbname='postgres', host='localhost',
-                password='bekeplar', port=5432,
-                user='postgres'
-                 )
+            dbname='postgres', host='localhost',
+            password='bekeplar', port=5432,
+            user='postgres'
+                )
             self.connection.autocommit = True
             self.cursor = self.connection.cursor()
             self.dict_cursor = self.connection.cursor(
@@ -37,7 +37,7 @@ class DatabaseConnection:
             registered TEXT NOT NULL,
             isAdmin BOOL NOT NULL
                 );""" 
-  
+
             create_Incidents_table = """CREATE TABLE IF NOT EXISTS incidents(
             id SERIAL NOT NULL PRIMARY KEY,
             createdBy VARCHAR(50) NOT NULL,
@@ -56,14 +56,14 @@ class DatabaseConnection:
         except (Exception, psycopg2.DatabaseError) as error:
             pprint(error)
 
-    def insert_redflag(
-                    self, id, createdBy,
+    def insert_incident(
+                    self, incident_id, createdBy,
                     type, title, location,
                     comment, status, createdOn,
                     images, videos
                     ):
-        """Method for adding a new user to users"""
-        insert_redflag = """INSERT INTO incidents(
+        """Method for adding a new incident record to incidents"""
+        insert_incident = """INSERT INTO incidents(
            createdBy,
            type,
            title,
@@ -78,8 +78,8 @@ class DatabaseConnection:
                 title, location, comment,
                 status, createdOn,
                 images, videos)
-        pprint(insert_redflag)
-        self.dict_cursor.execute(insert_redflag)
+        pprint(insert_incident)
+        self.dict_cursor.execute(insert_incident)
     
     def add_user(self, id, firstname, lastname,
                  othernames, email, password,
@@ -114,33 +114,33 @@ class DatabaseConnection:
    
     def check_status(self, status):
         """
-        Check if a redflag status is  editable.
+        Check if an incident status is  editable.
         """
         query = f"SELECT * FROM incidents WHERE status='{status}';"
         pprint(query)
         self.cursor.execute(query)
-        redflag = self.cursor.fetchone()
-        return redflag
+        incident = self.cursor.fetchone()
+        return incident
 
     def check_title(self, title):
         """
-        Check if a redflag title already exists.
+        Check if a incident title already exists.
         """
         query = f"SELECT * FROM incidents WHERE title='{title}';"
         pprint(query)
         self.cursor.execute(query)
-        redflag = self.cursor.fetchone()
-        return redflag
+        incident = self.cursor.fetchone()
+        return incident
 
     def check_comment(self, comment):
         """
-        Check if a redflag comment already exists.
+        Check if an incident comment already exists.
         """
         query = f"SELECT * FROM incidents WHERE comment='{comment}';"
         pprint(query)
         self.cursor.execute(query)
-        redflag = self.cursor.fetchone()
-        return redflag
+        incident = self.cursor.fetchone()
+        return incident
 
     def check_email(self, email):
         """
@@ -168,23 +168,23 @@ class DatabaseConnection:
         user = self.dict_cursor.fetchone()
         return user
 
-    def fetch_all_redflags(self):
-        """Method to return all existing redflags"""
+    def fetch_all_incidents(self):
+        """Method to return all existing specified incident types"""
         query_all = "SELECT * FROM incidents;"
         pprint(query_all)
         self.dict_cursor.execute(query_all)
-        orders = self.dict_cursor.fetchall()
-        return orders
+        incidents = self.dict_cursor.fetchall()
+        return incidents
 
-    def fetch_redflag(self, id):
-        """Method to return a given redflag by its id."""
+    def fetch_incident(self, id):
+        """Method to return a given incident by its id."""
         query_one = "SELECT * FROM incidents WHERE id='{}'".format(id)
         pprint(query_one)
         self.dict_cursor.execute(query_one)
-        redflag = self.dict_cursor.fetchone()
-        return redflag
+        incidents = self.dict_cursor.fetchone()
+        return incidents
 
-    def delete_redflag(self, id):
+    def delete_incident(self, id):
         query = "DELETE FROM incidents  WHERE id='{}'".format(id)
         pprint(query)
         self.cursor.execute(query)
@@ -200,7 +200,7 @@ class DatabaseConnection:
         self.dict_cursor.execute(query)
 
     def update_location(self, id, location):
-        """Method to edit  redflag location."""
+        """Method to edit  an incident location."""
         query = """UPDATE incidents SET location='{}' WHERE id='{}'""".format(location, id)
         pprint(query)
         self.dict_cursor.execute(query)
@@ -217,6 +217,6 @@ class DatabaseConnection:
         self.cursor.execute(drop)
 
 
-if __name__ == '__main__':
-    database_connection = DatabaseConnection()
+# if __name__ == '__main__':
+    # database_connection = DatabaseConnection()
 # dbname = os.environ["DATABASE_URL"]           

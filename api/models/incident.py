@@ -19,6 +19,7 @@ class Incident:
         self.videos = args[9]
     
     def check_incident_exist(self):
+        """Function to check whether an incident already exists."""
         title = db.check_title(self.title)
         comment = db.check_comment(self.comment)
         if title != None:
