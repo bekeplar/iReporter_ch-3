@@ -74,6 +74,7 @@ pytest
 copy the url in the terminal
 paste it in postman
 Use the following sample data
+
 redflag = [
     {
         "createdBy":"Bekalaze",
