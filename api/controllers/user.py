@@ -58,16 +58,16 @@ class UserController:
         username = data.get('username')
         password = data.get('password')
 
+        # validating user input data
         error = Validation.login_validate(username, password)
 
         if error != None:
             return jsonify({'Error': error}), 400
 
-        db = DatabaseConnection()
         user = db.login(username)
         if user == None:
             return jsonify({'message': 'Wrong login credentials.'}), 400
-
+        # checking for known user credentials
         if check_password_hash(user['password'], password) and user['username'] == username:
             access_token = create_access_token(username)
             return jsonify({
@@ -77,4 +77,3 @@ class UserController:
             }), 200
         else:
             return jsonify({'message': 'Wrong login credentials.'}), 400
-        
