@@ -8,12 +8,12 @@ from api.models.incident import Incident
 db = DatabaseConnection()
 
 
-class RedflagController:
+class IncidentController:
     """
-    Class containing all logic connecting redflag views and models.
+    Class containing all logic connecting incident views and models.
     """
 
-    def create_new_redflag(self, data):
+    def create_new_incident(self, data, ireporter):
         """
         Method for creating a new redflag.
         """
@@ -28,109 +28,109 @@ class RedflagController:
         images = data.get('images')
         videos = data.get('videos')
 
-        redflag = Incident(incident_id, createdBy, type,
-                           title, location, comment,
-                           status, createdOn, images, videos
+        incident = Incident(incident_id, createdBy, type,
+                            title, location, comment,
+                            status, createdOn, images, videos
                            )
-        error = Validators.validate_inputs(redflag)      
-        exists = redflag.check_incident_exist()
+        error = Validators.validate_inputs(incident)      
+        exists = incident.check_incident_exist()
         if error != None:
             return jsonify({'Error': error, 'status': 400}), 400
         if exists:
             return jsonify({
-                'Error': 'Redflag record already reported!',
+                'Error': f'{ireporter} record already reported!',
                 'status': 406}), 406
         db.insert_redflag(incident_id, createdBy, type,
                           title, location, comment,
                           status, createdOn, images, videos)
         return jsonify({
             'status': 201, 
-            'message': 'created redflag reccord!',
+            'message': f'created {ireporter} reccord!',
             'id': incident_id,
-            'data': redflag.__dict__
+            'data': incident.__dict__
             }), 201
 
-    def fetch_all_redflags(self):
+    def fetch_all_incidents(self, ireporter):
         """
-        function to enable a user get all reported redflags
+        function to enable a user get all reported incidents
         :returns:
-        The entire redflags reported by a user.
+        The entire incidents reported by a user.
         """
-        all_redflags = db.fetch_all_redflags()
-        if not all_redflags:
+        all_incidents = db.fetch_all_redflags()
+        if not all_incidents:
             return jsonify({
                 'satus': 400,
-                'message': 'You haven/t reported any redflag!',
-                'data': all_redflags
+                'message': f'You haven/t reported any {ireporter}!',
+                'data': all_incidents
             }), 400
         return jsonify({
             'status': 200,
-            'data': all_redflags,
+            'data': all_incidents,
             'message': 'These are your reports!'
         }), 200
 
-    def fetch_one_redflag(self, redflag_id):
+    def fetch_one_incident(self, incident_id, ireporter):
         """
         This method enables a registered
-        user fetch a specific redflag record.
+        user fetch a specific incident record.
         :params:
         :returns:
         For any given right id
         """
         try:
-            get_one = db.fetch_redflag(redflag_id)
+            get_one = db.fetch_redflag(incident_id)
             if not get_one:
                 return jsonify({
                     'status': 404,
-                    'message': 'No such redflag record found!'}), 404
+                    'message': f'No such {ireporter} record found!'}), 404
             return jsonify({
                 'status': 404,
                 'data': get_one,
-                'message': 'Redflag record found succesfully.',
+                'message': f'{ireporter} record found succesfully.',
             }), 200
         except TypeError:
-            return jsonify({'message': 'Redflag Id must be a number.'}), 400
+            return jsonify({'message': f'{ireporter} Id must be a number.'}), 400
 
-    def delete_one_redflag(self, redflag_id):
+    def delete_one_incident(self, incident_id, ireporter):
         """
-        A method for deleting a specific redflag from the report.
+        A method for deleting a specific incident from the report.
         """
         try:
             username = get_jwt_identity()
-            get_one = db.fetch_redflag(redflag_id)
+            get_one = db.fetch_redflag(incident_id)
 
             if username and get_one:
-                db.delete_redflag(redflag_id)
+                db.delete_redflag(incident_id)
                 return jsonify({
-                    'message': 'Redflag record deleted succesfully.',
+                    'message': f'{ireporter} record deleted succesfully.',
                     'data': get_one,
                     'status': 200
                                 }), 200
             else:
                 return jsonify({
-                            'message': 'No such redflag record found!',
+                            'message': f'No such {ireporter} record found!',
                             'status': 404
                             }), 404
         except TypeError:
             return jsonify({'message': 'Only the reporter can delete this.',
                             'status': 401}), 401
 
-    def update_status(self, redflag_id, data):
+    def update_status(self, incident_id, data, ireporter):
         """
-        A method for updating status a specific redflag from the report.
+        A method for updating status a specific incident from the report.
         """
         try:
-            get_one = db.fetch_redflag(redflag_id)
+            get_one = db.fetch_redflag(incident_id)
             if get_one:
-                db.update_status(redflag_id, data)
+                db.update_status(incident_id, data)
                 return jsonify({
                     'status': 200,
-                    'data': db.fetch_redflag(redflag_id),
-                    'message': 'Redflag status successfully updated!'
+                    'data': db.fetch_redflag(incident_id),
+                    'message': f'{ireporter} status successfully updated!'
                                 }), 200
             else:
                 return jsonify({'status': 404,
-                                'message': 'No such redflag record found!'
+                                'message': f'No such {ireporter} record found!'
                                 }), 404
         except ValueError:
             return jsonify({
@@ -138,46 +138,46 @@ class RedflagController:
                 'message': 'Please provide right inputs'
             }), 400
   
-    def update_location(self, redflag_id, data):
+    def update_location(self, incident_id, data, ireporter):
         """
-        A method for updating location a specific redflag from the report.
+        A method for updating location a specific incident from the report.
         """
         location = data.get('location')
         try:
-            get_one = db.fetch_redflag(redflag_id)
+            get_one = db.fetch_redflag(incident_id)
             if get_one:
-                db.update_location(redflag_id, location)
+                db.update_location(incident_id, location)
                 return jsonify({
                     'status': 200,
-                    'data': db.fetch_redflag(redflag_id),
-                    'message': 'Redflag location successfully updated!'
+                    'data': db.fetch_redflag(incident_id),
+                    'message': f'{ireporter} location successfully updated!'
                                 }), 200
             else:
                 return jsonify({
                     'status': 404,
-                    'message': 'No such redflag record found!'
+                    'message': f'No such {ireporter} record found!'
                                 }), 404
         except ValueError:
             return jsonify({
                 'message': 'Please provide right inputs'
             }), 400
 
-    def update_comment(self, redflag_id, data):
+    def update_comment(self, incident_id, data, ireporter):
         """
-        A method for updating a comment of a specific redflag from the report.
+        A method for updating a comment of a specific incident from the report.
         """
         comment = data.get('comment')
         try:
-            get_one = db.fetch_redflag(redflag_id)
+            get_one = db.fetch_redflag(incident_id)
             if get_one:
-                db.update_comment(redflag_id, comment)
+                db.update_comment(incident_id, comment)
                 return jsonify({'status': 200,
-                                'data': db.fetch_redflag(redflag_id),
-                                'message': 'Redflag comment successfully updated!'
+                                'data': db.fetch_redflag(incident_id),
+                                'message': f'{ireporter} comment successfully updated!'
                                 }), 200
             else:
                 return jsonify({'status': 404,
-                                'message': 'No such redflag record found!'
+                                'message': f'No such {ireporter} record found!'
                                 }), 404
         except ValueError:
             return jsonify({
