@@ -23,11 +23,14 @@ class UserController:
         registered = datetime.datetime.utcnow()
         isAdmin = data.get('isAdmin')
         password = data.get('password')
-
+        
+        # creating a user object
         user = User(firstname, lastname, othernames,
                     email, phoneNumber, username, 
                     registered, isAdmin, password
                     )
+                
+        # Validating user inputs
         error = Validation.validate_input(user)
         errors = Validation.validate_inputs(user)
         exists = user.check_user_exist()
@@ -36,6 +39,7 @@ class UserController:
             return jsonify({'Error': error}), 400
         if errors != None:
             return jsonify({'Error': errors}), 400
+        # check if user already registered
         if exists:
             return jsonify({
                 'message':  'user already registered.',
@@ -77,4 +81,5 @@ class UserController:
             }), 200
         else:
             return jsonify({'message': 'Wrong login credentials.'}), 400
+# courtesy of bekeplar.
         
