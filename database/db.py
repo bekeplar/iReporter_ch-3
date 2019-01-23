@@ -10,57 +10,51 @@ class DatabaseConnection:
 
     def __init__(self):
 
-        if os.environ.get("APP_ENV") == "Development":
-            var_obj = DevelopmentConfig
-            self.dbname = var_obj.DB_NAME
-            self.hostname = var_obj.HOST_NAME
-            self.user_name = var_obj.USER_NAME
-            self.password = var_obj.USER_PASSWORD
-            self.port = var_obj.DB_PORT
+        self.db_name = os.getenv('DB_NAME')
 
-            try:
-                self.connection = psycopg2.connect(
-                    dbname=self.dbname, host=self.hostname,
-                    password=self.password, port=self.port,
-                    user=self.user_name
-                    )
-                self.connection.autocommit = True
-                self.cursor = self.connection.cursor()
-                self.dict_cursor = self.connection.cursor(
-                                                cursor_factory=RealDictCursor)
-                # pprint('Connected to the database')
-                # pprint(self.db_name)
+        try:
+            self.connection = psycopg2.connect(
+            dbname='postgres', host='localhost',
+            password='bekeplar', port=5432,
+            user='postgres'
+                )
+            self.connection.autocommit = True
+            self.cursor = self.connection.cursor()
+            self.dict_cursor = self.connection.cursor(
+                                            cursor_factory=RealDictCursor)
+            # pprint('Connected to the database')
+            # pprint(self.db_name)
 
-                create_user_table = """CREATE TABLE IF NOT EXISTS users(
-                id SERIAL PRIMARY KEY,
-                firstname VARCHAR(50) NOT NULL,
-                lastname VARCHAR(50) NOT NULL,
-                othernames VARCHAR(50) NOT NULL,
-                username VARCHAR(50) NOT NULL,
-                email VARCHAR(50) NOT NULL,
-                phoneNumber int,
-                password TEXT NOT NULL,
-                registered TEXT NOT NULL,
-                isAdmin BOOL NOT NULL
-                    );""" 
-    
-                create_Incidents_table = """CREATE TABLE IF NOT EXISTS incidents(
-                id SERIAL NOT NULL PRIMARY KEY,
-                createdBy VARCHAR(50) NOT NULL,
-                type VARCHAR(50) NOT NULL,
-                title VARCHAR(50) NOT NULL,
-                location VARCHAR(50) NOT NULL,
-                comment VARCHAR(50) NOT NULL,
-                status VARCHAR(50) NOT NULL,
-                createdOn TEXT NOT NULL,
-                images TEXT NOT NULL,
-                videos TEXT NOT NULL
-                    );"""
-                self.cursor.execute(create_Incidents_table)
-                self.cursor.execute(create_user_table)
+            create_user_table = """CREATE TABLE IF NOT EXISTS users(
+            id SERIAL PRIMARY KEY,
+            firstname VARCHAR(50) NOT NULL,
+            lastname VARCHAR(50) NOT NULL,
+            othernames VARCHAR(50) NOT NULL,
+            username VARCHAR(50) NOT NULL,
+            email VARCHAR(50) NOT NULL,
+            phoneNumber int,
+            password TEXT NOT NULL,
+            registered TEXT NOT NULL,
+            isAdmin BOOL NOT NULL
+                );""" 
 
-            except (Exception, psycopg2.DatabaseError) as error:
-                pprint(error)
+            create_Incidents_table = """CREATE TABLE IF NOT EXISTS incidents(
+            id SERIAL NOT NULL PRIMARY KEY,
+            createdBy VARCHAR(50) NOT NULL,
+            type VARCHAR(50) NOT NULL,
+            title VARCHAR(50) NOT NULL,
+            location VARCHAR(50) NOT NULL,
+            comment VARCHAR(50) NOT NULL,
+            status VARCHAR(50) NOT NULL,
+            createdOn TEXT NOT NULL,
+            images TEXT NOT NULL,
+            videos TEXT NOT NULL
+                );"""
+            self.cursor.execute(create_Incidents_table)
+            self.cursor.execute(create_user_table)
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            pprint(error)
 
     def insert_incident(
                     self, incident_id, createdBy,

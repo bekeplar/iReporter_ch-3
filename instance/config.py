@@ -17,11 +17,7 @@ class DevelopmentConfig(BaseConfig):
     DEBUG = True
     TESTING = False
     ENV = "Development"
-    DB_NAME = 'postgres'
-    HOST_NAME = 'localhost'
-    USER_PASSWORD = 'bekeplar'
-    USER_NAME = 'postgres'
-    DB_PORT = 5432
+
     
 
 class TestingConfig(BaseConfig):
