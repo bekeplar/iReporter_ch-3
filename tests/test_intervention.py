@@ -319,3 +319,44 @@ class TestIntervention(unittest.TestCase):
 
         message = json.loads(response.data.decode())
         self.assertEqual(message['Error'], 'Please fill in the comments field!')
+
+    def test_get_all_intervention_records(self):
+        """Test that a user can get all his created intervention records"""
+        
+        response = self.test_client.post(
+            'api/v1/auth/login',
+            content_type='application/json',
+            data=json.dumps(self.login_user)
+        )
+        access_token = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        
+        response = self.test_client.post(
+            'api/v1/interventions',
+            headers={'Authorization': 'Bearer ' + access_token['token']},
+            content_type='application/json',
+            data=json.dumps(self.intervention)
+        )
+        response = self.test_client.get(
+            '/api/v1/interventions',
+            headers={'Authorization': 'Bearer ' + access_token['token']},
+            content_type='application/json'
+
+        )
+        reply = json.loads(response.data.decode())
+        self.assertEqual(reply['message'], 'These are your reports!')
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_all_interventions_non_user(self):
+        """Test that a non-user cannot get created records"""
+        
+        response = self.test_client.post(
+            'api/v1/interventions',
+            content_type='application/json',
+            data=json.dumps(self.intervention)
+        )
+        response = self.test_client.get(
+            '/api/v1/interventions',
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, 401)

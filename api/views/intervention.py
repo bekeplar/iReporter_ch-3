@@ -19,3 +19,13 @@ def create_intervention():
     """
     data = json.loads(request.data)
     return intervention_controller.create_new_incident(data, 'intervention')
+
+@intervention_blueprint.route('/interventions', methods=['GET'])
+@jwt_required
+def get_all_interventions():
+    """
+    View function containing route for getting all intervention records.
+    """
+
+    return intervention_controller.fetch_all_incidents('interventions')
+
