@@ -458,7 +458,66 @@ class TestIntervention(unittest.TestCase):
         response = self.test_client.delete(
             '/api/v1/interventions/2',
         )
-        self.assertEqual(response.status_code, 401)  
+        self.assertEqual(response.status_code, 401) 
+
+    def test_update_location_specific_intervention(self):
+        """Test that a user can update location of an intervention"""
+        
+        response = self.test_client.post(
+            'api/v1/auth/login',
+            content_type='application/json',
+            data=json.dumps(self.login_user)
+        )
+        access_token = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        
+        response = self.test_client.post(
+            'api/v1/interventions',
+            content_type='application/json',
+            headers={'Authorization': 'Bearer ' + access_token['token']},
+            data=json.dumps(self.intervention)
+        )
+        new_location = {
+            
+            "location": "1.784, 4.0987"
+        }
+
+        response = self.test_client.patch(
+            'api/v1/interventions/2/location',
+            content_type='application/json',
+            headers={'Authorization': 'Bearer ' + access_token['token']},
+            data=json.dumps(new_location)
+        )
+        self.assertEqual(response.status_code, 200)
+    
+    def test_update_location_specific_intervention_not_in_list(self):
+        """Test that a user cannot update non existing intervention"""
+
+        response = self.test_client.post(
+            'api/v1/auth/login',
+            content_type='application/json',
+            data=json.dumps(self.login_user)
+        )
+        access_token = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        
+        response = self.test_client.post(
+            'api/v1/interventions',
+            content_type='application/json',
+            headers={'Authorization': 'Bearer ' + access_token['token']},
+            data=json.dumps(self.intervention)
+        )
+        new_location = {
+            
+            "location": "1.784, 4.0987"
+        }
+        response = self.test_client.patch(
+            'api/v1/interventions/1/location',
+            content_type='application/json',
+            headers={'Authorization': 'Bearer ' + access_token['token']},
+            data=json.dumps(new_location)
+        )
+        self.assertEqual(response.status_code, 404) 
 
 
 

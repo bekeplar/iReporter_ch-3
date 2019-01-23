@@ -48,6 +48,18 @@ def delete_specific_redflag(intervention_id):
     View function with route for getting a specific redflag from the report.
     """
     return intervention_controller.delete_one_incident(intervention_id, 'intervention')
+
+
+@intervention_blueprint.route('/interventions/<int:intervention_id>/location', methods=['PATCH'])
+@jwt_required
+def edit_location_of_intervention(intervention_id):
+    """
+    Function wirh a route for editing an intervention's location.
+    """
+    data = json.loads(request.data)
+    return intervention_controller.update_location(intervention_id,
+                                                   data, 'intervention')
+
   
 
 
