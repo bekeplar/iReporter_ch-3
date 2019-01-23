@@ -571,6 +571,54 @@ class TestIntervention(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 404)
 
+    def test_edit_comment_not_existing(self):
+        """Test that a user cannot update comment for non existing incident"""
+       
+        response = self.test_client.post(
+            'api/v1/auth/login',
+            content_type='application/json',
+            data=json.dumps(self.login_user)
+        )
+        access_token = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        new_location = {
+            "comment": "Nurses stock drugs in their drugshops"  
+        }
 
+        response = self.test_client.patch(
+            'api/v1/interventions/10000/comment',
+            content_type='application/json',
+            headers={'Authorization': 'Bearer ' + access_token['token']},
+            data=json.dumps(new_location)
+        )
+        self.assertEqual(response.status_code, 404)
 
+    def test_update_comment_specific_intervention(self):
+        """Test that a user can update comment of a specific created intervention"""
+       
+        response = self.test_client.post(
+            'api/v1/auth/login',
+            content_type='application/json',
+            data=json.dumps(self.login_user)
+        )
+        access_token = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+
+        response = self.test_client.post(
+            'api/v1/interventions',
+            content_type='application/json',
+            headers={'Authorization': 'Bearer ' + access_token['token']},
+            data=json.dumps(self.intervention)
+        )
+        updated_comment = {
+            "comment": "Nurses stock drugs in their drugshops"
+        }
+
+        response = self.test_client.patch(
+            'api/v1/interventions/2/comment',
+            content_type='application/json',
+            headers={'Authorization': 'Bearer ' + access_token['token']},
+            data=json.dumps(updated_comment)
+        )
+        self.assertEqual(response.status_code, 200)
 

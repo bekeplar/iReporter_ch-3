@@ -79,6 +79,19 @@ def edit_intervention_status(intervention_id):
     data = request.get_json()['status']
     return intervention_controller.update_status(intervention_id, data,
                                                  'intervention')
+
+
+@intervention_blueprint.route('/interventions/<int:intervention_id>/comment',
+                              methods=['PATCH']
+                              )
+@jwt_required
+def edit_intervention_comment(intervention_id):
+    """
+    Function wirh a route for editing an intervention's comment.
+    """
+    data = json.loads(request.data)
+    return intervention_controller.update_comment(intervention_id, data,
+                                                  'intervention')
 # courtesy of bekeplar
 
   
