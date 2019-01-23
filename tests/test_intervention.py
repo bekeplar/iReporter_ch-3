@@ -321,8 +321,7 @@ class TestIntervention(unittest.TestCase):
         self.assertEqual(message['Error'], 'Please fill in the comments field!')
 
     def test_get_all_intervention_records(self):
-        """Test that a user can get all his
-        created intervention records"""
+        """Test that a user can get all his created intervention records"""
         
         response = self.test_client.post(
             'api/v1/auth/login',
@@ -361,42 +360,3 @@ class TestIntervention(unittest.TestCase):
             content_type='application/json'
         )
         self.assertEqual(response.status_code, 401)
-
-    def test_get_specific_intervention_not_existing(self):
-        """Test that a user cannot get a non existing intervention record"""
-        
-        response = self.test_client.post(
-            'api/v1/auth/login',
-            content_type='application/json',
-            data=json.dumps(self.login_user)
-        )
-        access_token = json.loads(response.data.decode())
-        self.assertEqual(response.status_code, 200)
-
-        response = self.test_client.post(
-            'api/v1/interventions',
-            content_type='application/json',
-            headers={'Authorization': 'Bearer ' + access_token['token']},
-            data=json.dumps(self.intervention)
-        )
-        response = self.test_client.get(
-            '/api/v1/interventions/1'
-        )
-        self.assertEqual(response.status_code, 401)
-
-    def test_get_specific_incident_from_empty_list(self):
-        """Test that a user cannot get an intervention from empty list"""
-        
-        response = self.test_client.post(
-            'api/v1/auth/login',
-            content_type='application/json',
-            data=json.dumps(self.login_user)
-        )
-        access_token = json.loads(response.data.decode())
-        self.assertEqual(response.status_code, 200)
-        response = self.test_client.get(
-            '/api/v1/interventions/1',
-            headers={'Authorization': 'Bearer ' + access_token['token']}
-        )
-        self.assertEqual(response.status_code, 200)
-
