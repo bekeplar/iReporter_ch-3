@@ -361,3 +361,104 @@ class TestIntervention(unittest.TestCase):
             content_type='application/json'
         )
         self.assertEqual(response.status_code, 401)
+
+
+    def test_get_specific_intervention_not_existing(self):
+        """Test that a user cannot get a non existing intervention record"""
+        
+        response = self.test_client.post(
+            'api/v1/auth/login',
+            content_type='application/json',
+            data=json.dumps(self.login_user)
+        )
+        access_token = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+
+        response = self.test_client.post(
+            'api/v1/interventions',
+            content_type='application/json',
+            headers={'Authorization': 'Bearer ' + access_token['token']},
+            data=json.dumps(self.intervention)
+        )
+        response = self.test_client.get(
+            '/api/v1/interventions/1'
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_get_specific_incident_from_empty_list(self):
+        """Test that a user cannot get an intervention from empty list"""
+        
+        response = self.test_client.post(
+            'api/v1/auth/login',
+            content_type='application/json',
+            data=json.dumps(self.login_user)
+        )
+        access_token = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        response = self.test_client.get(
+            '/api/v1/interventions/1',
+            headers={'Authorization': 'Bearer ' + access_token['token']}
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_delete_specific_intervention(self):
+        """Test that a user can delete a specific created intervention"""
+
+        response = self.test_client.post(
+            'api/v1/auth/login',
+            content_type='application/json',
+            data=json.dumps(self.login_user)
+        )
+        access_token = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+       
+        response = self.test_client.post(
+            'api/v1/interventions',
+            content_type='application/json',
+            headers={'Authorization': 'Bearer ' + access_token['token']},
+            data=json.dumps(self.intervention)
+        )
+        response = self.test_client.delete(
+            '/api/v1/interventions/1',
+            headers={'Authorization': 'Bearer ' + access_token['token']}
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_delete_specific_intervntion_not_in_list(self):
+        """Test that a user cannot delete non existing"""
+
+        response = self.test_client.post(
+            'api/v1/auth/login',
+            content_type='application/json',
+            data=json.dumps(self.login_user)
+        )
+        access_token = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        
+        response = self.test_client.post(
+            'api/v1/intervention',
+            content_type='application/json',
+            headers={'Authorization': 'Bearer ' + access_token['token']},
+            data=json.dumps(self.intervention)
+        )
+        response = self.test_client.delete(
+            '/api/v1/interventions/1000',
+            headers={'Authorization': 'Bearer ' + access_token['token']}
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_delete_specific_intrvention_unauthorized(self):
+        """Test that a non user cannot delete an intervention record"""
+       
+        response = self.test_client.post(
+            'api/v1/interventions',
+            content_type='application/json',
+            data=json.dumps(self.intervention)
+        )
+        response = self.test_client.delete(
+            '/api/v1/interventions/2',
+        )
+        self.assertEqual(response.status_code, 401)  
+
+
+

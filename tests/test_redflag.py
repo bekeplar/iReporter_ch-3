@@ -413,7 +413,7 @@ class TestRedflag(unittest.TestCase):
             '/api/v1/redflags/1',
             headers={'Authorization': 'Bearer ' + access_token['token']}
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)
 
     def test_delete_specific_redflag_not_in_list(self):
         """Test that a user cannot delete non existing"""
