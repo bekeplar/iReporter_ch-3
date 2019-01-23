@@ -18,7 +18,8 @@ def create_intervention():
    
     """
     data = json.loads(request.data)
-    return intervention_controller.create_new_incident(data, 'intervention')
+    return intervention_controller.create_new_incident(data,
+                                                       'intervention')
 
 
 @intervention_blueprint.route('/interventions', methods=['GET'])
@@ -31,26 +32,32 @@ def get_all_interventions():
     return intervention_controller.fetch_all_incidents('interventions')
 
 
-
-@intervention_blueprint.route('/interventions/<int:intervention_id>', methods=['GET'])
+@intervention_blueprint.route('/interventions/<int:intervention_id>',
+                              methods=['GET'])
 @jwt_required
 def get_specific_intervention(intervention_id):
     """
     View function for getting a specific intervention from the report.
     """
-    return intervention_controller.fetch_one_incident(intervention_id, 'intervention')
+    return intervention_controller.fetch_one_incident(intervention_id,
+                                                      'intervention')
 
 
-@intervention_blueprint.route('/interventions/<int:intervention_id>', methods=['DELETE'])
+@intervention_blueprint.route('/interventions/<int:intervention_id>',
+                              methods=['DELETE']
+                              )
 @jwt_required
 def delete_specific_redflag(intervention_id):
     """
     View function with route for getting a specific redflag from the report.
     """
-    return intervention_controller.delete_one_incident(intervention_id, 'intervention')
+    return intervention_controller.delete_one_incident(intervention_id,
+                                                       'intervention')
 
 
-@intervention_blueprint.route('/interventions/<int:intervention_id>/location', methods=['PATCH'])
+@intervention_blueprint.route('/interventions/<int:intervention_id>/location',
+                              methods=['PATCH']
+                              )
 @jwt_required
 def edit_location_of_intervention(intervention_id):
     """
@@ -58,8 +65,21 @@ def edit_location_of_intervention(intervention_id):
     """
     data = json.loads(request.data)
     return intervention_controller.update_location(intervention_id,
-                                                   data, 'intervention')
-                            
+                                                   data, 'intervention'
+                                                   )
+
+
+@intervention_blueprint.route('/interventions/<int:intervention_id>/status',
+                              methods=['PATCH'])
+@jwt_required
+def edit_intervention_status(intervention_id):
+    """
+    Function for editing an intervention's status.
+    """
+    data = request.get_json()['status']
+    return intervention_controller.update_status(intervention_id, data,
+                                                 'intervention')
+
 # courtesy of bekeplar
 
   
