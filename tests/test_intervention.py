@@ -349,7 +349,8 @@ class TestIntervention(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_get_all_interventions_non_user(self):
-        """Test that a non-user cannot get created records"""
+        """Test that a non-user cannot get created records
+        """
         
         response = self.test_client.post(
             'api/v1/interventions',
