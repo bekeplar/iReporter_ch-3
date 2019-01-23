@@ -26,11 +26,19 @@ def create_app(config_name):
             "POST /api/v1/auth/signup",
             "POST /api/v1/auth/login",
             "GET /api/v1/redflags",
-            "GET /api/v1 /redflags/<int:id>",
-            "PATCH /api/v1/redflags/<int:id>/location",
-            "PATCH /api/v1/redflags/<int:id>/status",
-            "PATCH /api/v1/redflags/<int:id>/comment",
-            "DELETE /api/v1/redflags/<int:id>Delete a redflag"
+            "POST /api/v1/redflags",
+            "POST /api/v1/interventions",
+            "GET /api/v1/interventions",
+            "GET /api/v1 /redflags/<int:redflag_id>",
+            "PATCH /api/v1/redflags/<int:redflag_id>/location",
+            "PATCH /api/v1/redflags/<int:redflag_id>/status",
+            "PATCH /api/v1/redflags/<int:redflag_id>/comment",
+            "DELETE /api/v1/redflags/<int:redflag_id>",
+            "GET /api/v1 /interventions/<int:intervention_id>",
+            "PATCH /api/v1/intervention/<int:intervention_id>/location",
+            "PATCH /api/v1/interventions/<int:intervention_id>/status",
+            "PATCH /api/v1/interventions/<int:intervention_id>/comment",
+            "DELETE /api/v1/interventions/<int:intervention_id>"
         ]
 
     @app.errorhandler(Exception)
