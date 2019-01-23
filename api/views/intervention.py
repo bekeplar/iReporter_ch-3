@@ -29,3 +29,12 @@ def get_all_interventions():
 
     return intervention_controller.fetch_all_incidents('interventions')
 
+@intervention_blueprint.route('/interventions/<int:intervention_id>', methods=['GET'])
+@jwt_required
+def get_specific_intervention(intervention_id):
+    """
+    View function for getting a specific intervention from the report.
+    """
+    return intervention_controller.fetch_one_incident(intervention_id, 'intervention')
+  
+
