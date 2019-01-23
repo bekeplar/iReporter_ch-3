@@ -452,7 +452,7 @@ class TestRedflag(unittest.TestCase):
         self.assertEqual(response.status_code, 401)  
 
     def test_update_status_specific_redflag(self):
-        """Test that a user can update comment of a specific created redflag"""
+        """Test that a user can update status of a specific created redflag"""
        
         response = self.test_client.post(
             'api/v1/auth/login',

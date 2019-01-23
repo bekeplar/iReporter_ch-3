@@ -6,6 +6,7 @@ import json
 
 class TestIntervention(unittest.TestCase):
     """class for testing intervention records"""
+
     def setUp(self):
         """
         Setting up a test client
@@ -39,7 +40,7 @@ class TestIntervention(unittest.TestCase):
             "images": "nn.jpg",
             "videos": "nn.mp4"
         }
- 
+
     def test_create_an_intervention(self):
         """
         Test if a user can create an intervention successfully.
@@ -50,8 +51,9 @@ class TestIntervention(unittest.TestCase):
             data=json.dumps(self.user)
         )
         message = json.loads(response.data.decode())
-        self.assertEqual(message['message'], "bekeplar successfully registered.")
-       
+        self.assertEqual(message['message'],
+                         "bekeplar successfully registered.")
+
         response = self.test_client.post(
             'api/v1/auth/login',
             content_type='application/json',
@@ -59,7 +61,7 @@ class TestIntervention(unittest.TestCase):
         )
         access_token = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
-        
+
         response = self.test_client.post(
             'api/v1/interventions',
             headers={'Authorization': 'Bearer ' + access_token['token']},
@@ -83,7 +85,7 @@ class TestIntervention(unittest.TestCase):
         """
         Test if a non user can create an intervention record successfully.
         """
-        
+
         response = self.test_client.post(
             'api/v1/interventions',
             content_type='application/json',
@@ -95,13 +97,13 @@ class TestIntervention(unittest.TestCase):
         """
         Test if a user can create a redflag successfully.
         """
-        
+
         response = self.test_client.post(
             'api/v1/interventions',
             content_type='application/json',
             data=json.dumps(self.intervention)
         )
-        self.assertEqual(response.status_code, 401)    
+        self.assertEqual(response.status_code, 401)
 
     def test_create_intervention_empty_createdBy(self):
         """
@@ -194,7 +196,7 @@ class TestIntervention(unittest.TestCase):
         )
         message = json.loads(response.data.decode())
         self.assertEqual(message['Error'], 'Please fill in title field!')
-        
+
     def test_create_intervention_empty_video(self):
         """
         check if a user can create an incident with no video.
@@ -215,7 +217,7 @@ class TestIntervention(unittest.TestCase):
             "status": "draft",
             "images": "nn.jpg",
             "videos": ""
-            
+
         }
         response = self.test_client.post(
             'api/v1/interventions',
@@ -229,7 +231,7 @@ class TestIntervention(unittest.TestCase):
         """
         check if a user can create an intervention with no images.
         """
-        
+
         response = self.test_client.post(
             'api/v1/auth/login',
             content_type='application/json',
@@ -246,7 +248,7 @@ class TestIntervention(unittest.TestCase):
             "status": "draft",
             "images": "",
             "videos": "nn.mp4"
-            
+
         }
         response = self.test_client.post(
             'api/v1/interventions',
@@ -318,11 +320,12 @@ class TestIntervention(unittest.TestCase):
         )
 
         message = json.loads(response.data.decode())
-        self.assertEqual(message['Error'], 'Please fill in the comments field!')
+        self.assertEqual(message['Error'],
+                         'Please fill in the comments field!')
 
     def test_get_all_intervention_records(self):
         """Test that a user can get all his created intervention records"""
-        
+
         response = self.test_client.post(
             'api/v1/auth/login',
             content_type='application/json',
@@ -330,7 +333,7 @@ class TestIntervention(unittest.TestCase):
         )
         access_token = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
-        
+
         response = self.test_client.post(
             'api/v1/interventions',
             headers={'Authorization': 'Bearer ' + access_token['token']},
@@ -350,7 +353,7 @@ class TestIntervention(unittest.TestCase):
     def test_get_all_interventions_non_user(self):
         """Test that a non-user cannot get created records
         """
-        
+
         response = self.test_client.post(
             'api/v1/interventions',
             content_type='application/json',
@@ -362,10 +365,9 @@ class TestIntervention(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 401)
 
-
     def test_get_specific_intervention_not_existing(self):
         """Test that a user cannot get a non existing intervention record"""
-        
+
         response = self.test_client.post(
             'api/v1/auth/login',
             content_type='application/json',
@@ -387,7 +389,7 @@ class TestIntervention(unittest.TestCase):
 
     def test_get_specific_incident_from_empty_list(self):
         """Test that a user cannot get an intervention from empty list"""
-        
+
         response = self.test_client.post(
             'api/v1/auth/login',
             content_type='application/json',
@@ -411,7 +413,7 @@ class TestIntervention(unittest.TestCase):
         )
         access_token = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
-       
+
         response = self.test_client.post(
             'api/v1/interventions',
             content_type='application/json',
@@ -434,7 +436,7 @@ class TestIntervention(unittest.TestCase):
         )
         access_token = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
-        
+
         response = self.test_client.post(
             'api/v1/intervention',
             content_type='application/json',
@@ -449,7 +451,7 @@ class TestIntervention(unittest.TestCase):
 
     def test_delete_specific_intrvention_unauthorized(self):
         """Test that a non user cannot delete an intervention record"""
-       
+
         response = self.test_client.post(
             'api/v1/interventions',
             content_type='application/json',
@@ -458,11 +460,11 @@ class TestIntervention(unittest.TestCase):
         response = self.test_client.delete(
             '/api/v1/interventions/2',
         )
-        self.assertEqual(response.status_code, 401) 
+        self.assertEqual(response.status_code, 401)
 
     def test_update_location_specific_intervention(self):
         """Test that a user can update location of an intervention"""
-        
+
         response = self.test_client.post(
             'api/v1/auth/login',
             content_type='application/json',
@@ -470,7 +472,7 @@ class TestIntervention(unittest.TestCase):
         )
         access_token = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
-        
+
         response = self.test_client.post(
             'api/v1/interventions',
             content_type='application/json',
@@ -478,7 +480,7 @@ class TestIntervention(unittest.TestCase):
             data=json.dumps(self.intervention)
         )
         new_location = {
-            
+
             "location": "1.784, 4.0987"
         }
 
@@ -489,7 +491,7 @@ class TestIntervention(unittest.TestCase):
             data=json.dumps(new_location)
         )
         self.assertEqual(response.status_code, 200)
-    
+
     def test_update_location_specific_intervention_not_in_list(self):
         """Test that a user cannot update non existing intervention"""
 
@@ -500,7 +502,7 @@ class TestIntervention(unittest.TestCase):
         )
         access_token = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
-        
+
         response = self.test_client.post(
             'api/v1/interventions',
             content_type='application/json',
@@ -508,7 +510,7 @@ class TestIntervention(unittest.TestCase):
             data=json.dumps(self.intervention)
         )
         new_location = {
-            
+
             "location": "1.784, 4.0987"
         }
         response = self.test_client.patch(
@@ -517,11 +519,11 @@ class TestIntervention(unittest.TestCase):
             headers={'Authorization': 'Bearer ' + access_token['token']},
             data=json.dumps(new_location)
         )
-        self.assertEqual(response.status_code, 404) 
+        self.assertEqual(response.status_code, 404)
 
     def test_update_status_of_intervention(self):
         """Test that a user can update comment of an intervention record"""
-       
+
         response = self.test_client.post(
             'api/v1/auth/login',
             content_type='application/json',
@@ -536,7 +538,7 @@ class TestIntervention(unittest.TestCase):
             headers={'Authorization': 'Bearer ' + access_token['token']},
             data=json.dumps(self.intervention)
         )
-        new_status = { 
+        new_status = {
             "status": "resolved"
         }
 
@@ -547,9 +549,9 @@ class TestIntervention(unittest.TestCase):
             data=json.dumps(new_status)
         )
         reply = json.loads(response.data.decode())
-        self.assertEqual(reply['message'], 'intervention status successfully updated!')
+        self.assertEqual(reply['message'],
+                         'intervention status successfully updated!')
         self.assertEqual(response.status_code, 200)
-
 
     def test_edit_status_not_in_list(self):
         """Test that a user cannot update status for non existing incident"""
@@ -562,7 +564,7 @@ class TestIntervention(unittest.TestCase):
         access_token = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         new_location = {
-            "status": "resolved"  
+            "status": "resolved"
         }
 
         response = self.test_client.patch(
@@ -573,6 +575,53 @@ class TestIntervention(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 404)
 
+    def test_edit_comment_not_existing(self):
+        """Test that a user cannot update comment for non existing incident"""
 
+        response = self.test_client.post(
+            'api/v1/auth/login',
+            content_type='application/json',
+            data=json.dumps(self.login_user)
+        )
+        access_token = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        new_location = {
+            "comment": "Nurses stock drugs in their drugshops"
+        }
 
+        response = self.test_client.patch(
+            'api/v1/interventions/10000/comment',
+            content_type='application/json',
+            headers={'Authorization': 'Bearer ' + access_token['token']},
+            data=json.dumps(new_location)
+        )
+        self.assertEqual(response.status_code, 404)
 
+    def test_update_comment_specific_intervention(self):
+        """Test that a user can update comment of a specific created intervention"""
+
+        response = self.test_client.post(
+            'api/v1/auth/login',
+            content_type='application/json',
+            data=json.dumps(self.login_user)
+        )
+        access_token = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+
+        response = self.test_client.post(
+            'api/v1/interventions',
+            content_type='application/json',
+            headers={'Authorization': 'Bearer ' + access_token['token']},
+            data=json.dumps(self.intervention)
+        )
+        updated_comment = {
+            "comment": "Nurses stock drugs in their drugshops"
+        }
+
+        response = self.test_client.patch(
+            'api/v1/interventions/2/comment',
+            content_type='application/json',
+            headers={'Authorization': 'Bearer ' + access_token['token']},
+            data=json.dumps(updated_comment)
+        )
+        self.assertEqual(response.status_code, 200)
