@@ -321,8 +321,7 @@ class TestIntervention(unittest.TestCase):
         self.assertEqual(message['Error'], 'Please fill in the comments field!')
 
     def test_get_all_intervention_records(self):
-        """Test that a user can get all his
-        created intervention records"""
+        """Test that a user can get all his created intervention records"""
         
         response = self.test_client.post(
             'api/v1/auth/login',
@@ -362,6 +361,7 @@ class TestIntervention(unittest.TestCase):
             content_type='application/json'
         )
         self.assertEqual(response.status_code, 401)
+
 
     def test_get_specific_intervention_not_existing(self):
         """Test that a user cannot get a non existing intervention record"""
@@ -459,4 +459,6 @@ class TestIntervention(unittest.TestCase):
             '/api/v1/interventions/2',
         )
         self.assertEqual(response.status_code, 401)  
+
+
 

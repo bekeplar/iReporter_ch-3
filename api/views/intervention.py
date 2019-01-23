@@ -31,6 +31,7 @@ def get_all_interventions():
     return intervention_controller.fetch_all_incidents('interventions')
 
 
+
 @intervention_blueprint.route('/interventions/<int:intervention_id>', methods=['GET'])
 @jwt_required
 def get_specific_intervention(intervention_id):
@@ -48,4 +49,5 @@ def delete_specific_redflag(intervention_id):
     """
     return intervention_controller.delete_one_incident(intervention_id, 'intervention')
   
+
 
