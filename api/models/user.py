@@ -17,9 +17,10 @@ class User:
         self.password = args[8]
 
     def check_user_exist(self):
+        """Function for verrifying a known user."""
         username = db.check_username(self.username)
         email = db.check_email(self.email)
-        if username != None:
+        if username:
             return 'Username is taken.'
-        if email != None:
+        if email:
             return 'Email already has an account.'

@@ -23,7 +23,6 @@ def home():
 def create_redflag():
     """
     Function that adds a redflag incident to list of redflags.
-   
     """
     data = json.loads(request.data)
     return redflag_controller.create_new_incident(data, 'redflag')
@@ -46,7 +45,7 @@ def get_specific_redflag(redflag_id):
     View function for getting a specific redflag from the report.
     """
     return redflag_controller.fetch_one_incident(redflag_id, 'redflag')
-  
+
 
 @blueprint.route('/redflags/<int:redflag_id>', methods=['DELETE'])
 @jwt_required
@@ -85,4 +84,3 @@ def edit_comment_of_redflag(redflag_id):
     """
     data = json.loads(request.data)
     return redflag_controller.update_comment(redflag_id, data, 'redflag')
-
