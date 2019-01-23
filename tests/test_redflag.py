@@ -424,7 +424,7 @@ class TestRedflag(unittest.TestCase):
             data=json.dumps(self.login_user)
         )
         access_token = json.loads(response.data.decode())
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)
         
         response = self.test_client.post(
             'api/v1/redflags',
