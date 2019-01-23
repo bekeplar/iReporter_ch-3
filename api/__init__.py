@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 import datetime
 from instance.config import app_config
 from api.views.redflag import blueprint
+from api.views.intervention import intervention_blueprint
 from api.views.user import user_blueprint
 from flask_jwt_extended import JWTManager
 
@@ -18,6 +19,7 @@ def create_app(config_name):
     #  Register blueprints
     app.register_blueprint(blueprint, url_prefix='/api/v1')
     app.register_blueprint(user_blueprint, url_prefix='/api/v1')
+    app.register_blueprint(intervention_blueprint, url_prefix='/api/v1')
 
     valid_urls = [
             "GET /api/v1/",

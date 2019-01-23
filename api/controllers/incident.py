@@ -16,7 +16,7 @@ class IncidentController:
 
     def create_new_incident(self, data, ireporter):
         """
-        Method for creating a new redflag.
+        Method for creating a new incident record.
         """
         incident_id = uuid.uuid4()
         createdBy = data.get('createdBy')

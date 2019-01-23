@@ -43,13 +43,6 @@ class TestRedflag(unittest.TestCase):
         """
         Test if a user can create a redflag successfully.
         """
-        response = self.test_client.post(
-            'api/v1/auth/signup',
-            content_type='application/json',
-            data=json.dumps(self.user)
-        )
-        message = json.loads(response.data.decode())
-        self.assertEqual(message['message'], "bekeplar successfully registered.")
        
         response = self.test_client.post(
             'api/v1/auth/login',
