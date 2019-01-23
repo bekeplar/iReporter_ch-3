@@ -519,5 +519,60 @@ class TestIntervention(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 404) 
 
+    def test_update_status_of_intervention(self):
+        """Test that a user can update comment of an intervention record"""
+       
+        response = self.test_client.post(
+            'api/v1/auth/login',
+            content_type='application/json',
+            data=json.dumps(self.login_user)
+        )
+        access_token = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+
+        response = self.test_client.post(
+            'api/v1/interventions',
+            content_type='application/json',
+            headers={'Authorization': 'Bearer ' + access_token['token']},
+            data=json.dumps(self.intervention)
+        )
+        new_status = { 
+            "status": "resolved"
+        }
+
+        response = self.test_client.patch(
+            'api/v1/interventions/2/status',
+            content_type='application/json',
+            headers={'Authorization': 'Bearer ' + access_token['token']},
+            data=json.dumps(new_status)
+        )
+        reply = json.loads(response.data.decode())
+        self.assertEqual(reply['message'], 'intervention status successfully updated!')
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_edit_status_not_in_list(self):
+        """Test that a user cannot update status for non existing incident"""
+
+        response = self.test_client.post(
+            'api/v1/auth/login',
+            content_type='application/json',
+            data=json.dumps(self.login_user)
+        )
+        access_token = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        new_location = {
+            "status": "resolved"  
+        }
+
+        response = self.test_client.patch(
+            'api/v1/interventions/10000/status',
+            content_type='application/json',
+            headers={'Authorization': 'Bearer ' + access_token['token']},
+            data=json.dumps(new_location)
+        )
+        self.assertEqual(response.status_code, 404)
+
+
 
 
