@@ -362,7 +362,6 @@ class TestIntervention(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 401)
 
-
     def test_get_specific_intervention_not_existing(self):
         """Test that a user cannot get a non existing intervention record"""
         
@@ -549,7 +548,6 @@ class TestIntervention(unittest.TestCase):
         reply = json.loads(response.data.decode())
         self.assertEqual(reply['message'], 'intervention status successfully updated!')
         self.assertEqual(response.status_code, 200)
-
 
     def test_edit_status_not_in_list(self):
         """Test that a user cannot update status for non existing incident"""

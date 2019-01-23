@@ -79,7 +79,6 @@ def edit_intervention_status(intervention_id):
     data = request.get_json()['status']
     return intervention_controller.update_status(intervention_id, data,
                                                  'intervention')
-
 # courtesy of bekeplar
 
   
