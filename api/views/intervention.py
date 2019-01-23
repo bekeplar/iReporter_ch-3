@@ -59,6 +59,8 @@ def edit_location_of_intervention(intervention_id):
     data = json.loads(request.data)
     return intervention_controller.update_location(intervention_id,
                                                    data, 'intervention')
+                            
+# courtesy of bekeplar
 
   
 
