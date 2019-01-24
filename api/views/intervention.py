@@ -2,7 +2,7 @@ import json
 from database.db import DatabaseConnection
 from flask import request, Blueprint
 from api.controllers.incident import IncidentController
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 db = DatabaseConnection()
 
 intervention_blueprint = Blueprint('intervention blueprint', __name__)

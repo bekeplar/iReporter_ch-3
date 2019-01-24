@@ -9,7 +9,7 @@ class Incident:
     def __init__(self, *args):
         self.incident_id = args[0]
         self.createdBy = args[1]
-        self.type = args[2]
+        self.incident_type = args[2]
         self.title = args[3]
         self.location = args[4]
         self.comment = args[5]

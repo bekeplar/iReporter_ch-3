@@ -21,7 +21,7 @@ class IncidentController:
         """
         incident_id = uuid.uuid4()
         createdBy = data.get('createdBy')
-        type = data.get('type')
+        incident_type = data.get('type')
         title = data.get('title')
         location = data.get('location')
         comment = data.get('comment')
@@ -31,7 +31,7 @@ class IncidentController:
         videos = data.get('videos')
 
         # view of an incident object/instance.
-        incident = Incident(incident_id, createdBy, type,
+        incident = Incident(incident_id, createdBy, incident_type,
                             title, location, comment,
                             status, createdOn, images, videos)
         error = Validators.validate_inputs(incident)
@@ -44,7 +44,7 @@ class IncidentController:
                 'Error': f'{ireporter} record already reported!',
                 'status': 406}), 406
         # create a new incident in the database of records
-        db.insert_incident(incident_id, createdBy, type,
+        db.insert_incident(incident_id, createdBy, incident_type,
                            title, location, comment,
                            status, createdOn, images, videos)
         return jsonify({
@@ -60,9 +60,10 @@ class IncidentController:
         :returns:
         The entire incidents reported by a user.
         """
+        username = get_jwt_identity()
         all_incidents = db.fetch_all_incidents()
         # Verify that there are records in the database
-        if not all_incidents:
+        if not username and all_incidents:
             return jsonify({
                 'satus': 400,
                 'message': f'You haven/t reported any {ireporter}!',
@@ -129,6 +130,7 @@ class IncidentController:
         A method for updating status a specific incident from the report.
         """
         try:
+            
             get_one = db.fetch_incident(incident_id)
             if get_one:
                 db.update_status(incident_id, data)
