@@ -15,7 +15,7 @@ intervention_controller = IncidentController()
 def create_intervention():
     """
     Function that adds an intervention record incidents.
-   
+
     """
     data = json.loads(request.data)
     return intervention_controller.create_new_incident(data,
@@ -93,7 +93,3 @@ def edit_intervention_comment(intervention_id):
     return intervention_controller.update_comment(intervention_id, data,
                                                   'intervention')
 # courtesy of bekeplar
-
-  
-
-

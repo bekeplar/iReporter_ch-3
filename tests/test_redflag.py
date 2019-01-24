@@ -38,12 +38,12 @@ class TestRedflag(unittest.TestCase):
             "images": "nn.jpg",
             "videos": "nn.mp4"
         }
- 
+
     def test_create_redflag(self):
         """
         Test if a user can create a redflag successfully.
         """
-       
+
         response = self.test_client.post(
             'api/v1/auth/login',
             content_type='application/json',
@@ -51,7 +51,7 @@ class TestRedflag(unittest.TestCase):
         )
         access_token = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
-        
+
         response = self.test_client.post(
             'api/v1/redflags',
             headers={'Authorization': 'Bearer ' + access_token['token']},
@@ -75,7 +75,7 @@ class TestRedflag(unittest.TestCase):
         """
         Test if a non user can create a redflag successfully.
         """
-        
+
         response = self.test_client.post(
             'api/v1/redflags',
             content_type='application/json',
@@ -87,13 +87,13 @@ class TestRedflag(unittest.TestCase):
         """
         Test if a user can create a redflag successfully.
         """
-        
+
         response = self.test_client.post(
             'api/v1/redflags',
             content_type='application/json',
             data=json.dumps(self.redflag)
         )
-        self.assertEqual(response.status_code, 401)    
+        self.assertEqual(response.status_code, 401)
 
     def test_create_redflag_empty_createdBy(self):
         """
@@ -186,7 +186,7 @@ class TestRedflag(unittest.TestCase):
         )
         message = json.loads(response.data.decode())
         self.assertEqual(message['Error'], 'Please fill in title field!')
-        
+
     def test_create_redflag_empty_video(self):
         """
         check if a user can create a redflag with no video.
@@ -207,7 +207,7 @@ class TestRedflag(unittest.TestCase):
             "status": "draft",
             "images": "nn.jpg",
             "videos": ""
-            
+
         }
         response = self.test_client.post(
             'api/v1/redflags',
@@ -221,7 +221,7 @@ class TestRedflag(unittest.TestCase):
         """
         check if a user can create a redflag with no images.
         """
-        
+
         response = self.test_client.post(
             'api/v1/auth/login',
             content_type='application/json',
@@ -238,7 +238,7 @@ class TestRedflag(unittest.TestCase):
             "status": "draft",
             "images": "",
             "videos": "nn.mp4"
-            
+
         }
         response = self.test_client.post(
             'api/v1/redflags',
@@ -310,11 +310,12 @@ class TestRedflag(unittest.TestCase):
         )
 
         message = json.loads(response.data.decode())
-        self.assertEqual(message['Error'], 'Please fill in the comments field!')
- 
+        self.assertEqual(message['Error'],
+                         'Please fill in the comments field!')
+
     def test_get_all_redflags(self):
         """Test that a user can get all his created redflags"""
-        
+
         response = self.test_client.post(
             'api/v1/auth/login',
             content_type='application/json',
@@ -322,7 +323,7 @@ class TestRedflag(unittest.TestCase):
         )
         access_token = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
-        
+
         response = self.test_client.post(
             'api/v1/redflags',
             headers={'Authorization': 'Bearer ' + access_token['token']},
@@ -341,7 +342,7 @@ class TestRedflag(unittest.TestCase):
 
     def test_get_all_redflags_non_user(self):
         """Test that a non-user cannot get created redflags"""
-        
+
         response = self.test_client.post(
             'api/v1/redflags',
             content_type='application/json',
@@ -355,7 +356,7 @@ class TestRedflag(unittest.TestCase):
 
     def test_get_specific_redflag_not_existing(self):
         """Test that a user cannot get a non existing redflag record"""
-        
+
         response = self.test_client.post(
             'api/v1/auth/login',
             content_type='application/json',
@@ -377,7 +378,7 @@ class TestRedflag(unittest.TestCase):
 
     def test_get_specific_redflag_empty_list(self):
         """Test that a user cannot get a redflag from empty list"""
-        
+
         response = self.test_client.post(
             'api/v1/auth/login',
             content_type='application/json',
@@ -390,7 +391,7 @@ class TestRedflag(unittest.TestCase):
             headers={'Authorization': 'Bearer ' + access_token['token']}
         )
         reply = json.loads(response.data.decode())
-        self.assertEqual(reply['message'],  'No such redflag record found!' )
+        self.assertEqual(reply['message'],  'No such redflag record found!')
 
     def test_delete_specific_redflag(self):
         """Test that a user can delete a specific created redflags"""
@@ -402,7 +403,7 @@ class TestRedflag(unittest.TestCase):
         )
         access_token = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
-       
+
         response = self.test_client.post(
             'api/v1/redflags',
             content_type='application/json',
@@ -425,7 +426,7 @@ class TestRedflag(unittest.TestCase):
         )
         access_token = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
-        
+
         response = self.test_client.post(
             'api/v1/redflags',
             content_type='application/json',
@@ -440,7 +441,7 @@ class TestRedflag(unittest.TestCase):
 
     def test_delete_specific_redflag_not_authorized(self):
         """Test that a non user cannot delete a redflag record"""
-       
+
         response = self.test_client.post(
             'api/v1/redflags',
             content_type='application/json',
@@ -449,11 +450,11 @@ class TestRedflag(unittest.TestCase):
         response = self.test_client.delete(
             '/api/v1/redflags/2',
         )
-        self.assertEqual(response.status_code, 401)  
+        self.assertEqual(response.status_code, 401)
 
     def test_update_status_specific_redflag(self):
         """Test that a user can update status of a specific created redflag"""
-       
+
         response = self.test_client.post(
             'api/v1/auth/login',
             content_type='application/json',
@@ -468,7 +469,7 @@ class TestRedflag(unittest.TestCase):
             headers={'Authorization': 'Bearer ' + access_token['token']},
             data=json.dumps(self.redflag)
         )
-        new_status = { 
+        new_status = {
             "status": "resolved"
         }
 
@@ -479,12 +480,13 @@ class TestRedflag(unittest.TestCase):
             data=json.dumps(new_status)
         )
         reply = json.loads(response.data.decode())
-        self.assertEqual(reply['message'], 'redflag status successfully updated!')
+        self.assertEqual(reply['message'],
+                         'redflag status successfully updated!')
         self.assertEqual(response.status_code, 200)
 
     def test_edit_comment_not_in_list(self):
         """Test that a user cannot update comment for non existing redflag"""
-       
+
         response = self.test_client.post(
             'api/v1/auth/login',
             content_type='application/json',
@@ -493,7 +495,7 @@ class TestRedflag(unittest.TestCase):
         access_token = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         new_location = {
-            "comment": "corruption is killing our systems"  
+            "comment": "corruption is killing our systems"
         }
 
         response = self.test_client.patch(
@@ -515,7 +517,7 @@ class TestRedflag(unittest.TestCase):
         access_token = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         new_location = {
-            "status": "resolved"  
+            "status": "resolved"
         }
 
         response = self.test_client.patch(
@@ -528,7 +530,7 @@ class TestRedflag(unittest.TestCase):
 
     def test_update_comment_specific_redflag(self):
         """Test that a user can update comment of a specific created redflag"""
-       
+
         response = self.test_client.post(
             'api/v1/auth/login',
             content_type='application/json',
@@ -543,7 +545,7 @@ class TestRedflag(unittest.TestCase):
             headers={'Authorization': 'Bearer ' + access_token['token']},
             data=json.dumps(self.redflag)
         )
-        new_comment = { 
+        new_comment = {
             "comment": "corruption is killing our systems"
         }
 
@@ -556,8 +558,10 @@ class TestRedflag(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_update_location_specific_redflag(self):
-        """Test that a user can update location of a specific created redflag"""
-        
+        """
+        Test that a user can update location of a specific created redflag
+        """
+
         response = self.test_client.post(
             'api/v1/auth/login',
             content_type='application/json',
@@ -565,7 +569,7 @@ class TestRedflag(unittest.TestCase):
         )
         access_token = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
-        
+
         response = self.test_client.post(
             'api/v1/redflags',
             content_type='application/json',
@@ -573,7 +577,7 @@ class TestRedflag(unittest.TestCase):
             data=json.dumps(self.redflag)
         )
         new_location = {
-            
+
             "location": "1.784, 4.0987"
         }
 
@@ -584,7 +588,7 @@ class TestRedflag(unittest.TestCase):
             data=json.dumps(new_location)
         )
         self.assertEqual(response.status_code, 200)
-    
+
     def test_update_location_specific_redflag_not_in_list(self):
         """Test that a user cannot update non existing created redflag"""
 
@@ -595,7 +599,7 @@ class TestRedflag(unittest.TestCase):
         )
         access_token = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
-        
+
         response = self.test_client.post(
             'api/v1/redflags',
             content_type='application/json',
@@ -603,7 +607,7 @@ class TestRedflag(unittest.TestCase):
             data=json.dumps(self.redflag)
         )
         new_location = {
-            
+
             "location": "1.784, 4.0987"
         }
         response = self.test_client.patch(

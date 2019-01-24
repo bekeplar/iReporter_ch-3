@@ -598,7 +598,9 @@ class TestIntervention(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_update_comment_specific_intervention(self):
-        """Test that a user can update comment of a specific created intervention"""
+        """Test that a user can update comment
+           of a specific created intervention
+        """
 
         response = self.test_client.post(
             'api/v1/auth/login',

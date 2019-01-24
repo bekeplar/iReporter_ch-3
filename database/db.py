@@ -2,7 +2,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from pprint import pprint
 import os
-from instance.config import DevelopmentConfig
+# from instance.config import DevelopmentConfig
 
 
 class DatabaseConnection:
@@ -14,14 +14,14 @@ class DatabaseConnection:
 
         try:
             self.connection = psycopg2.connect(
-            dbname='postgres', host='localhost',
-            password='bekeplar', port=5432,
-            user='postgres'
-                )
+                dbname='postgres', host='localhost',
+                password='bekeplar', port=5432,
+                user='postgres'
+            )
             self.connection.autocommit = True
             self.cursor = self.connection.cursor()
             self.dict_cursor = self.connection.cursor(
-                                            cursor_factory=RealDictCursor)
+                cursor_factory=RealDictCursor)
             # pprint('Connected to the database')
             # pprint(self.db_name)
 
@@ -36,7 +36,7 @@ class DatabaseConnection:
             password TEXT NOT NULL,
             registered TEXT NOT NULL,
             isAdmin BOOL NOT NULL
-                );""" 
+                );"""
 
             create_Incidents_table = """CREATE TABLE IF NOT EXISTS incidents(
             id SERIAL NOT NULL PRIMARY KEY,
@@ -57,11 +57,11 @@ class DatabaseConnection:
             pprint(error)
 
     def insert_incident(
-                    self, incident_id, createdBy,
-                    type, title, location,
-                    comment, status, createdOn,
-                    images, videos
-                    ):
+        self, incident_id, createdBy,
+        type, title, location,
+        comment, status, createdOn,
+        images, videos
+    ):
         """Method for adding a new incident record to incidents"""
         insert_incident = """INSERT INTO incidents(
            createdBy,
@@ -73,18 +73,19 @@ class DatabaseConnection:
            createdOn,
            images,
            videos
-            ) VALUES('{}', '{}','{}', '{}', '{}', '{}','{}', '{}', '{}')""".format(
-                createdBy, type,
-                title, location, comment,
-                status, createdOn,
-                images, videos)
+            ) VALUES\
+            ('{}', '{}','{}', '{}', '{}', '{}','{}', '{}', '{}')""".format(
+            createdBy, type,
+            title, location, comment,
+            status, createdOn,
+            images, videos)
         pprint(insert_incident)
         self.dict_cursor.execute(insert_incident)
-    
+
     def add_user(self, id, firstname, lastname,
                  othernames, email, password,
                  username, registered, isAdmin
-                    ):
+                 ):
         """Method for adding a new user to users"""
         insert_user = """INSERT INTO users(
            firstname,
@@ -96,9 +97,9 @@ class DatabaseConnection:
            registered,
            isAdmin
             ) VALUES('{}', '{}','{}', '{}', '{}', '{}','{}', '{}')""".format(
-                firstname, lastname,
-                othernames, email, password,
-                username, registered, isAdmin)
+            firstname, lastname,
+            othernames, email, password,
+            username, registered, isAdmin)
         pprint(insert_user)
         self.dict_cursor.execute(insert_user)
 
@@ -111,7 +112,7 @@ class DatabaseConnection:
         self.cursor.execute(query)
         user = self.cursor.fetchone()
         return user
-   
+
     def check_status(self, status):
         """
         Check if an incident status is  editable.
@@ -144,7 +145,7 @@ class DatabaseConnection:
 
     def check_email(self, email):
         """
-        Check if a email already exists. 
+        Check if a email already exists.
         """
         query = f"SELECT * FROM users WHERE email='{email}';"
         pprint(query)
@@ -190,24 +191,28 @@ class DatabaseConnection:
         self.cursor.execute(query)
 
     def update_status(self, id, status):
-        query = "UPDATE incidents SET status='{}' WHERE id='{}'".format(status, id)
+        query = "UPDATE incidents SET status='{}' WHERE id='{}'".format(
+            status, id)
         pprint(query)
         self.cursor.execute(query)
 
     def update_comment(self, id, comment):
-        query = """UPDATE incidents SET comment='{}' WHERE id='{}'""".format(comment, id)
+        query = """UPDATE incidents SET comment='{}' WHERE id='{}'""".format(
+            comment, id)
         pprint(query)
         self.dict_cursor.execute(query)
 
     def update_location(self, id, location):
         """Method to edit  an incident location."""
-        query = """UPDATE incidents SET location='{}' WHERE id='{}'""".format(location, id)
+        query = """UPDATE incidents SET location='{}' WHERE id='{}'""".format(
+            location, id)
         pprint(query)
         self.dict_cursor.execute(query)
 
     def create_admin(self, userId, admin):
         "Method to create an admin"
-        query = """UPDATE  users SET admin='{}' WHERE userId='{}'""".format(True, userId)
+        query = """UPDATE  users SET admin='{}' WHERE userId='{}'""".format(
+            True, userId)
         pprint(query)
         self.dict_cursor.execute(query)
 
@@ -216,7 +221,6 @@ class DatabaseConnection:
         pprint(drop)
         self.cursor.execute(drop)
 
-
-# if __name__ == '__main__':
-    # database_connection = DatabaseConnection()
-# dbname = os.environ["DATABASE_URL"]           
+    # if __name__ == '__main__':
+    #     database_connection = DatabaseConnection()
+# dbname = os.environ["DATABASE_URL"]

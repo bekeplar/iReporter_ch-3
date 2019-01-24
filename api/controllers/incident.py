@@ -1,6 +1,7 @@
 # importing required dependencies
 import datetime
 import uuid
+from api.models.user import User
 from database.db import DatabaseConnection
 from flask import jsonify
 from api.validators.incident import Validators
@@ -28,14 +29,14 @@ class IncidentController:
         createdOn = datetime.datetime.utcnow()
         images = data.get('images')
         videos = data.get('videos')
-        
+
         # view of an incident object/instance.
         incident = Incident(incident_id, createdBy, type,
                             title, location, comment,
                             status, createdOn, images, videos)
-        error = Validators.validate_inputs(incident)      
+        error = Validators.validate_inputs(incident)
         exists = incident.check_incident_exist()
-        if error != None:
+        if error:
             return jsonify({'Error': error, 'status': 400}), 400
         # check if already existing incident record.
         if exists:
@@ -47,11 +48,11 @@ class IncidentController:
                            title, location, comment,
                            status, createdOn, images, videos)
         return jsonify({
-            'status': 201, 
+            'status': 201,
             'message': f'created {ireporter} reccord!',
             'id': incident_id,
             'data': incident.__dict__
-            }), 201
+        }), 201
 
     def fetch_all_incidents(self, ireporter):
         """
@@ -87,14 +88,17 @@ class IncidentController:
             if not get_one:
                 return jsonify({
                     'status': 404,
-                    'message': f'No such {ireporter} record found!'}), 404
+                    'message': f'No such {ireporter} record found!'
+                    }), 404
             return jsonify({
                 'status': 404,
                 'data': get_one,
                 'message': f'{ireporter} record found succesfully.',
             }), 200
         except TypeError:
-            return jsonify({'message': f'{ireporter} Id must be a number.'}), 400
+            return jsonify({
+                'message': f'{ireporter} Id must be a number.'
+                }), 400
 
     def delete_one_incident(self, incident_id, ireporter):
         """
@@ -110,12 +114,12 @@ class IncidentController:
                     'message': f'{ireporter} record deleted succesfully.',
                     'data': get_one,
                     'status': 200
-                                }), 200
+                }), 200
             else:
                 return jsonify({
-                            'message': f'No such {ireporter} record found!',
-                            'status': 404
-                            }), 404
+                    'message': f'No such {ireporter} record found!',
+                    'status': 404
+                }), 404
         except TypeError:
             return jsonify({'message': 'Only the reporter can delete this.',
                             'status': 401}), 401
@@ -132,7 +136,7 @@ class IncidentController:
                     'status': 200,
                     'data': db.fetch_incident(incident_id),
                     'message': f'{ireporter} status successfully updated!'
-                                }), 200
+                }), 200
             else:
                 return jsonify({'status': 404,
                                 'message': f'No such {ireporter} record found!'
@@ -142,7 +146,7 @@ class IncidentController:
                 'status': 400,
                 'message': 'Please provide right inputs'
             }), 400
-  
+
     def update_location(self, incident_id, data, ireporter):
         """
         A method for updating location a specific incident from the report.
@@ -156,12 +160,12 @@ class IncidentController:
                     'status': 200,
                     'data': db.fetch_incident(incident_id),
                     'message': f'{ireporter} location successfully updated!'
-                                }), 200
+                }), 200
             else:
                 return jsonify({
                     'status': 404,
                     'message': f'No such {ireporter} record found!'
-                                }), 404
+                }), 404
         except ValueError:
             return jsonify({
                 'message': 'Please provide right inputs'
@@ -176,9 +180,10 @@ class IncidentController:
             get_one = db.fetch_incident(incident_id)
             if get_one:
                 db.update_comment(incident_id, comment)
-                return jsonify({'status': 200,
-                                'data': db.fetch_incident(incident_id),
-                                'message': f'{ireporter} comment successfully updated!'
+                return jsonify({
+                    'status': 200,
+                    'data': db.fetch_incident(incident_id),
+                    'message': f'{ireporter} comment successfully updated!'
                                 }), 200
             else:
                 return jsonify({'status': 404,
