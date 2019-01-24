@@ -105,36 +105,6 @@ class TestIntervention(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 401)
 
-    def test_create_intervention_empty_createdBy(self):
-        """
-        Test if a user can create an intervention with missing createdBy.
-        """
-        response = self.test_client.post(
-            'api/v1/auth/login',
-            content_type='application/json',
-            data=json.dumps(self.login_user)
-        )
-        access_token = json.loads(response.data.decode())
-        intervention = {
-            "createdBy": "",
-            "type": "intervention",
-            "title": "insufficient drugs",
-            "location": "1.33, 2.045",
-            "comment": "There are no drugs at Mukono Health center IV",
-            "status": "draft",
-            "images": "nn.jpg",
-            "videos": "nn.mp4"
-        }
-
-        response = self.test_client.post(
-            'api/v1/interventions',
-            content_type='application/json',
-            headers={'Authorization': 'Bearer ' + access_token['token']},
-            data=json.dumps(intervention)
-        )
-        message = json.loads(response.data.decode())
-        self.assertEqual(message['Error'], 'Please fill in reporter field!')
-
     def test_create_intervention_empty_type(self):
         """
         Test if a user can be created with no type of incident.

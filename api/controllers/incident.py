@@ -1,10 +1,8 @@
 # importing required dependencies
 import datetime
 import uuid
-from api.models.user import User
 from database.db import DatabaseConnection
 from flask import jsonify
-from api.validators.incident import Validators
 from flask_jwt_extended import get_jwt_identity
 from api.models.incident import Incident
 db = DatabaseConnection()
@@ -30,13 +28,17 @@ class IncidentController:
         images = data.get('images')
         videos = data.get('videos')
 
+        print('we got here')
         # view of an incident object/instance.
         incident = Incident(incident_id, createdBy, incident_type,
                             title, location, comment,
                             status, createdOn, images, videos)
-        error = Validators.validate_inputs(incident)
+
+        
+        # error = Validators.validate_inputs(incident)
+        error = incident.validate()
         exists = incident.check_incident_exist()
-        if error:
+        if error is not None:
             return jsonify({'Error': error, 'status': 400}), 400
         # check if already existing incident record.
         if exists:
@@ -44,9 +46,12 @@ class IncidentController:
                 'Error': f'{ireporter} record already reported!',
                 'status': 406}), 406
         # create a new incident in the database of records
+        print('and here as well ... ')
         db.insert_incident(incident_id, createdBy, incident_type,
                            title, location, comment,
                            status, createdOn, images, videos)
+
+        print('after the database insert.. ')
         return jsonify({
             'status': 201,
             'message': f'created {ireporter} reccord!',

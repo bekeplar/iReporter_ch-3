@@ -94,37 +94,7 @@ class TestRedflag(unittest.TestCase):
             data=json.dumps(self.redflag)
         )
         self.assertEqual(response.status_code, 401)
-
-    def test_create_redflag_empty_createdBy(self):
-        """
-        Test if a user can create a redflag with missing createdBy.
-        """
-        response = self.test_client.post(
-            'api/v1/auth/login',
-            content_type='application/json',
-            data=json.dumps(self.login_user)
-        )
-        access_token = json.loads(response.data.decode())
-        redflag = {
-            "createdBy": "",
-            "type": "redflag",
-            "title": "corruption",
-            "location": "1.33, 2.045",
-            "comment": "corrupt traffic officers in mukono",
-            "status": "draft",
-            "images": "nn.jpg",
-            "videos": "nn.mp4"
-        }
-
-        response = self.test_client.post(
-            'api/v1/redflags',
-            content_type='application/json',
-            headers={'Authorization': 'Bearer ' + access_token['token']},
-            data=json.dumps(redflag)
-        )
-        message = json.loads(response.data.decode())
-        self.assertEqual(message['Error'], 'Please fill in reporter field!')
-
+ 
     def test_create_redflag_empty_type(self):
         """
         Test if a user can be created with no type of incident.

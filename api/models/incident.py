@@ -26,3 +26,18 @@ class Incident:
             return 'Title already reported.'
         if comment:
             return 'comment already reported.'
+
+    def validate(self):
+        """Method for validating user data"""
+        if self.title.isspace() or not self.title:
+            return 'Please fill in title field!'
+        elif self.location.isspace() or not self.location:
+            return 'Please fill in location field!'
+        elif self.incident_type.isspace() or not self.incident_type:
+            return 'Please select incident type!'
+        elif self.comment.isspace() or not self.comment:
+            return 'Please fill in the comments field!'
+        elif self.incident_type.isspace() or not self.incident_type:
+            return 'Please select incident type!'
+        else: 
+            return None
