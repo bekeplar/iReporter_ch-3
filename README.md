@@ -65,12 +65,16 @@ python run.py
 
 ```cd iReporter
 python -m venv venv
+or
+pip install virtualenv
 venv\Scripts\activate
 ```
 
 - Run tests by
 
-```pytest
+```- pytest
+   - pytest --cov
+   - pytest -v
 
 ```
 
@@ -82,7 +86,7 @@ Use the following sample data
 
 redflag = [
     {
-        "createdBy":"Bekalaze",
+        "createdBy":1,
         "type":"redflag",
         "title":"corruption",
         "location":"1.33, 2.045",
@@ -90,6 +94,18 @@ redflag = [
         "status":"draft",
         "images":"nn.jpg",
         "videos":"nn.mp4"
+    }
+]
+
+intervention = [
+    {
+        "createdBy":1,
+        "type":"intervention",
+        "title":"Bribery",
+        "location":"1.33, 2.045",
+        "comment":"There is no medicine in Health centre IV",
+        "status":"draft",
+        "images":"nn.jpg"
     }
 ]
 
@@ -105,6 +121,11 @@ user = [
         "password":"bekeplar1234"
     }
 ]
+```
+
+## Hosting link
+
+```https://kepireporter.herokuapp.com/
 ```
 
 ## Authors
