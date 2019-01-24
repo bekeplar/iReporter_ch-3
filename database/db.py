@@ -41,7 +41,7 @@ class DatabaseConnection:
             create_Incidents_table = """CREATE TABLE IF NOT EXISTS incidents(
             id SERIAL NOT NULL PRIMARY KEY,
             createdBy VARCHAR(50) NOT NULL,
-            type VARCHAR(50) NOT NULL,
+            incident_type VARCHAR(50) NOT NULL,
             title VARCHAR(50) NOT NULL,
             location VARCHAR(50) NOT NULL,
             comment VARCHAR(50) NOT NULL,
@@ -58,14 +58,14 @@ class DatabaseConnection:
 
     def insert_incident(
         self, incident_id, createdBy,
-        type, title, location,
+        incident_type, title, location,
         comment, status, createdOn,
         images, videos
     ):
         """Method for adding a new incident record to incidents"""
         insert_incident = """INSERT INTO incidents(
            createdBy,
-           type,
+           incident_type,
            title,
            location,
            comment,
@@ -75,7 +75,7 @@ class DatabaseConnection:
            videos
             ) VALUES\
             ('{}', '{}','{}', '{}', '{}', '{}','{}', '{}', '{}')""".format(
-            createdBy, type,
+            createdBy, incident_type,
             title, location, comment,
             status, createdOn,
             images, videos)
