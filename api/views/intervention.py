@@ -18,6 +18,7 @@ def create_intervention():
 
     """
     data = request.get_json()
+    # print(data)
     return intervention_controller.create_new_incident(data,
                                                         'intervention')
 
