@@ -36,7 +36,7 @@ class IncidentController:
                             status, createdOn, images, videos)
         error = Validators.validate_inputs(incident)
         exists = incident.check_incident_exist()
-        if error:
+        if error == None:
             return jsonify({'Error': error, 'status': 400}), 400
         # check if already existing incident record.
         if exists:

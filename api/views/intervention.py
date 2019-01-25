@@ -1,6 +1,6 @@
 import json
 from database.db import DatabaseConnection
-from flask import request, Blueprint
+from flask import request, Blueprint, jsonify
 from api.controllers.incident import IncidentController
 from flask_jwt_extended import jwt_required, get_jwt_identity
 db = DatabaseConnection()
@@ -17,10 +17,9 @@ def create_intervention():
     Function that adds an intervention record incidents.
 
     """
-    data = json.loads(request.data)
+    data = request.get_json()
     return intervention_controller.create_new_incident(data,
-                                                       'intervention')
-
+                                                        'intervention')
 
 @intervention_blueprint.route('/interventions', methods=['GET'])
 @jwt_required
